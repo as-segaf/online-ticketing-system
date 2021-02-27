@@ -13,7 +13,7 @@ class AuthenticationTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * A basic feature test example.
+     *
      *
      * @return void
      */
