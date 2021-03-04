@@ -19,7 +19,6 @@ class CreateOrdersTable extends Migration
             $table->foreignId('ticket_id')->constrained();
             $table->integer('quantity');
             $table->unsignedMediumInteger('total_price');
-            $table->dateTime('time_paid');
             $table->timestamps();
         });
     }
