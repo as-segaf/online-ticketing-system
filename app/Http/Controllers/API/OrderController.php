@@ -90,7 +90,25 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-        //
+        try {
+            $order = Order::findOrFail($id);
+        } catch (ModelNotFoundException $exception) {
+            return response()->json([
+                'code' => 404,
+                'message' => 'Order not found'
+            ], 404);
+        } catch (Exception $exception) {
+            return response()->json([
+                'code' => 500,
+                'message' => $exception->getMessage()
+            ],500);
+        }
+
+        return response()->json([
+            'code' => 200,
+            'message' => 'success',
+            'data' => $order
+        ],200);
     }
 
     /**

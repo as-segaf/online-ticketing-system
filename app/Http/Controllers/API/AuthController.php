@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\LoginRequest;
+use App\Models\Ticket;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Exception;
@@ -68,5 +69,10 @@ class AuthController extends Controller
             'code' => 200,
             'message' => 'success'
         ],200);
+    }
+
+    public function testing()
+    {
+        return User::all();
     }
 }
