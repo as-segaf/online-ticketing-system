@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Order;
 use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -71,5 +72,31 @@ class OrderTest extends TestCase
             ]);
             
         $this->assertDatabaseCount('user_tickets', $data['quantity']);
+    }
+
+    public function testAuthenticatedUserCanSeeSpecificOrder()
+    {
+        $this->withoutExceptionHandling();
+        $ticket = Ticket::create([
+            'id' => 1,
+            'price' => 10000
+        ]);
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+        
+        $order = Order::create([
+            'user_id' => $user->id,
+            'ticket_id' => $ticket->id,
+            'quantity' => 2,
+            'total_price' => 20000
+        ]);
+
+        $this->json('get', '/api/order/'.$order->id, ['Accept' => 'application/json'])
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                'code',
+                'message',
+                'data'
+            ]);
     }
 }
