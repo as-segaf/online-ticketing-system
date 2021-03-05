@@ -69,6 +69,7 @@ class OrderTest extends TestCase
             'message',
             'data'
             ]);
-        }
-
+            
+        $this->assertDatabaseCount('user_tickets', $data['quantity']);
+    }
 }
