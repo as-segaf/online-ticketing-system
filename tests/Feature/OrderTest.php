@@ -13,11 +13,18 @@ use Tests\TestCase;
 class OrderTest extends TestCase
 {
     use RefreshDatabase;
-    /**
-     * 
-     *
-     * @return void
-     */
+
+    public function testUserMustLogin()
+    {
+        // $this->withoutExceptionHandling();
+        $this->json('get', '/api/order', ['Accept' => 'application/json'])
+            ->assertStatus(401)
+            ->assertJsonStructure([
+                'code',
+                'message'
+            ]);
+    }
+
     public function testAuthenticatedUserCanSeeAllHisOrder()
     {
         $this->withoutExceptionHandling();
