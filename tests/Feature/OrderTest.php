@@ -74,6 +74,30 @@ class OrderTest extends TestCase
         $this->assertDatabaseCount('user_tickets', $data['quantity']);
     }
 
+    public function testCannotGetWrongTicketId()
+    {
+        $this->withoutExceptionHandling();
+
+        Ticket::create([
+            'id' => 2,
+            'price' => 10000
+        ]);
+
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+
+        $data = [
+            'quantity' => 5
+        ];
+        
+        $this->json('post', '/api/order', $data, ['Accept' => 'application/json'])
+        ->assertStatus(404)
+        ->assertJsonStructure([
+            'code',
+            'message',
+            ]);
+    }
+
     public function testAuthenticatedUserCanSeeSpecificOrder()
     {
         $this->withoutExceptionHandling();
@@ -97,6 +121,21 @@ class OrderTest extends TestCase
                 'code',
                 'message',
                 'data'
+            ]);
+    }
+
+    public function testCannotShowWrongOrder()
+    {
+        $this->withoutExceptionHandling();
+
+        $user = User::factory()->create();
+        Sanctum::actingAs($user);
+
+        $this->json('get', '/api/order/1', ['Accept' => 'application/json'])
+            ->assertStatus(404)
+            ->assertJsonStructure([
+                'code',
+                'message'
             ]);
     }
 }
